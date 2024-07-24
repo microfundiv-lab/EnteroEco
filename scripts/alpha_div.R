@@ -11,7 +11,7 @@ library(ggrastr)
 
 # input and output
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/")
-metadata = read.delim("metadata/metagenomes_11-2023_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
+metadata = read.delim("metadata/metagenomes_07-2024_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
 abund.data = fread("bwa/bwa_counts-filtered_batch-corr_samples.csv")
 rownames(metadata) = metadata$Sample
 abund.data.df = data.frame(abund.data[,-1], check.names = FALSE)
@@ -47,7 +47,7 @@ rarefy.df = rrarefy(transpose.df, 500000)
 
 # calculate alpha diversity
 metadata = metadata[intersect(rownames(rarefy.df), rownames(metadata)),]
-metadata$Alpha.div = diversity(rarefy.df, index="shannon")
+metadata$Alpha.div = vegan::diversity(rarefy.df, index="shannon")
 metadata$Richness = specnumber(rarefy.df)
 
 # only health adults
@@ -67,4 +67,4 @@ entero.alpha = ggplot(metadata, aes(x=Entero.abund, y=Alpha.div)) +
   theme(axis.text.x = element_text(size=14)) +
   theme(axis.text.y = element_text(size=14)) +
   annotation_custom(grob)
-ggsave("figures/alpha_diversity.pdf", dpi=300, height=4, width=8)
+ggsave("figures/alpha_diversity.pdf", dpi=300, height=4, width=7)

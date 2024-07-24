@@ -30,7 +30,7 @@ da.entero = da.result[rownames(da.result) %in% rownames(gtdb.tax[gtdb.tax$Family
 da.entero = da.entero[rowSums(da.entero) > 0, ]
 
 #filter metadata for different variables 
-metadata = read.delim("metadata/metagenomes_11-2023_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE) #, na.strings = ""
+metadata = read.delim("metadata/metagenomes_07-2024_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE) #, na.strings = ""
 rownames(metadata) = metadata$Sample
 metadata = metadata[which(!is.na(metadata$Disease.name) & !is.na(metadata$Age.group) & !is.na(metadata$Continent)),]
 

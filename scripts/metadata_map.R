@@ -13,7 +13,7 @@ library(mapproj)
 
 # load input
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/")
-metadata = read.delim("metadata/metagenomes_11-2023_samples.tsv")
+metadata = read.delim("metadata/metagenomes_07-2024_samples.tsv")
 metadata = metadata[!is.na(metadata$Country),]
 rownames(metadata) = metadata$Sample
 metadata$Country = gsub("United States of America", "United States", metadata$Country)

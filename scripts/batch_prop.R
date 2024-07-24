@@ -10,7 +10,7 @@ library(grid)
 # input and output
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/")
 abund.data = fread("bwa/bwa_counts-filtered_samples.csv")
-metadata = read.delim("metadata/metagenomes_11-2023_samples.tsv", check.names = TRUE)
+metadata = read.delim("metadata/metagenomes_07-2024_samples.tsv", check.names = TRUE)
 rownames(metadata) = metadata$Sample
 tax.df = unique(read.delim("metadata/species_uhgg_v1.2.tsv")[,c("Species_rep", "Lineage")])
 

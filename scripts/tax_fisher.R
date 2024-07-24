@@ -41,15 +41,15 @@ for (variable in var.list){
   counts.df$variable.group = ifelse(counts.df$variable == variable, variable, "all_other")
   cont.table = with(counts.df, xtabs(value ~ Classification + variable.group)) # create contingency table
   test.result = fisher.test(cont.table)
-  pos_prop = cont.table["Positive",variable]/(cont.table["Positive","all_other"]+cont.table["Positive",variable])*100
-  neg_prop = cont.table["Negative",variable]/(cont.table["Negative","all_other"]+cont.table["Negative",variable])*100
+  pos_prop = cont.table["Co-colonizer",variable]/(cont.table["Co-colonizer","all_other"]+cont.table["Co-colonizer",variable])*100
+  neg_prop = cont.table["Co-excluder",variable]/(cont.table["Co-excluder","all_other"]+cont.table["Co-excluder",variable])*100
   result = pos_prop - neg_prop
   result.df = rbind(result.df, data.frame(variable = variable, pos = pos_prop, neg = neg_prop, pvalue = test.result$p.value, result = result))
   counts.df$variable.group = NULL # clear for next cycle
 }
 result.df$FDR = p.adjust(result.df$pvalue, method="fdr")
 result.df = result.df[which(result.df$FDR < 0.05),]
-result.df$Classification = ifelse(result.df$result > 0, "Positive", "Negative")
+result.df$Classification = ifelse(result.df$result > 0, "Co-colonizer", "Co-excluder")
 rownames(result.df) = NULL
 
 # bar plots

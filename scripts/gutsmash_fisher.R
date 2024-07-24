@@ -50,7 +50,7 @@ barplot.df = barplot.df[which(barplot.df$type %in% c("pos", "neg")),]
 # clean up labels
 barplot.df$variable = gsub("_", " ", barplot.df$variable)
 barplot.df$variable = gsub("GR", "Glycyl-radical", barplot.df$variable)
-barplot.df$variable = gsub("AA", "amino acids", barplot.df$variable)
+barplot.df$variable = gsub("AA", "amino acid", barplot.df$variable)
 barplot.df$variable = gsub("Arginine2", "Arginine to", barplot.df$variable)
 barplot.df$variable = gsub("pdu", "Propanediol utilization", barplot.df$variable)
 barplot.df$variable = gsub("porA", "R-pyruvate to R-acetate (porA)", barplot.df$variable)
@@ -60,6 +60,7 @@ barplot.df$variable = gsub("Others HGD unassigned", "2-hydroxyglutaryl-CoA dehyd
 barplot.df$variable = gsub("TPP", "Thiamine Pyrophosphate", barplot.df$variable)
 barplot.df$variable = gsub("TMA", "Trimethylamine", barplot.df$variable)
 barplot.df$variable = gsub("toputrescine", "to putrescine", barplot.df$variable)
+barplot.df$variable = gsub("OD", "Oxidative decarboxylation", barplot.df$variable)
 
 bar.plot = ggplot(barplot.df, aes(x = reorder(variable, -value), y = value, fill = type))+
   geom_bar(stat = "identity", position = "stack", alpha=0.8) +

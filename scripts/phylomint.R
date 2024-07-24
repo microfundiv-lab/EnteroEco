@@ -12,7 +12,7 @@ rownames(metadata) = metadata$Species_rep
 metadata = metadata[which(metadata$Family != "Enterobacteriaceae"),]
 
 # parse phylomint results
-phylomint.res = read.table("phylomint_M3.tsv", fill=TRUE, header=TRUE)
+phylomint.res = read.table("phylomint_gapless.tsv", fill=TRUE, header=TRUE)
 phylomint.res$identifier = apply(phylomint.res[, c("A", "B")], 1, function(x) paste(sort(x), collapse="_"))
 phylomint.res = phylomint.res[!duplicated(phylomint.res$identifier), ]
 phylomint.res$identifier = NULL
@@ -28,7 +28,8 @@ phy.entero = merge(phy.entero, metadata[c("Species_rep", "Classification", "Orde
 
 # analyse clusters
 phy.entero$Cluster = NA
-phy.entero$Cluster[which(phy.entero$Competition < 0.68 & phy.entero$Complementarity < 0.15)] = "Cluster2"
+phy.entero$Prod = phy.entero$Competition*phy.entero$Complementarity
+phy.entero$Cluster[which(phy.entero$Prod < 0.06)] = "Cluster2"
 phy.entero$Cluster = ifelse(is.na(phy.entero$Cluster), "Cluster1", "Cluster2")
 
 # cluster dfs
@@ -90,4 +91,4 @@ plot.all = ggplot(phy.entero, aes(x=Classification, y= Distance, fill = Classifi
   theme(axis.title.y = element_text(size=14)) +
   theme(axis.text.y = element_text(size=12)) +
   theme(axis.text.x = element_text(size=12))
-ggsave(plot.entero, file = "../figures/phylomint_all.pdf", dpi=300, height=5, width=5)
+ggsave(plot.all, file = "../figures/phylomint_all.pdf", dpi=300, height=5, width=5)

@@ -10,7 +10,7 @@ library(ALDEx2)
 args = commandArgs(trailingOnly=TRUE)
 
 # input and output
-metadata = read.delim("/rds/project/rds-aFEMMKDjWlo/aalmeida/project_ecoevo/metadata/metagenomes_11-2023_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
+metadata = read.delim("/rds/project/rds-aFEMMKDjWlo/aalmeida/project_ecoevo/metadata/metagenomes_07-2024_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
 abund.data = fread("/rds/project/rds-aFEMMKDjWlo/aalmeida/project_ecoevo/bwa/bwa_counts-filtered_samples.csv")
 genomes.metadata = read.delim("/rds/project/rds-aFEMMKDjWlo/rfs_data/metadata/species_uhgg_v1.2.tsv", stringsAsFactors = FALSE)
 variable = args[1] # Entero.presence, Ecoli.presence, Kpneumo.presence

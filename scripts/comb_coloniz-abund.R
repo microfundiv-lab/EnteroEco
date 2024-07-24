@@ -103,9 +103,9 @@ process_fastspar = function(corr_df, pval_df, metavariable, taxon=NULL) {
 }
 
 fastspar.healthy = process_fastspar("fastspar/healthy-adult_species_corr.tsv", "fastspar/healthy-adult_species_pvalues.tsv", "Healthy-Adult")
-fastspar.highqual = process_fastspar("fastspar/hq_species_corr.tsv", "fastspar/hq_species_pvalues.tsv", "HQ")
+fastspar.highqual = process_fastspar("fastspar/all_species_corr.tsv", "fastspar/all_species_pvalues.tsv", "All")
 fastspar.entero.healthy = process_fastspar("fastspar/healthy-adult_entero_corr.tsv", "fastspar/healthy-adult_entero_pvalues.tsv", "Healthy-Adult", "Entero")
-fastspar.entero.highqual = process_fastspar("fastspar/hq_entero_corr.tsv", "fastspar/hq_entero_pvalues.tsv", "HQ", "Entero")
+fastspar.entero.highqual = process_fastspar("fastspar/all_entero_corr.tsv", "fastspar/all_entero_pvalues.tsv", "All", "Entero")
 
 # Mmrge all fastspar dataframes
 df_list = list(fastspar.highqual, fastspar.healthy, fastspar.entero.highqual, fastspar.entero.healthy)
@@ -121,7 +121,7 @@ colnames(combined.df)[1] = "Species_rep"
 
 # filter for coloniz and abund
 taxa = c("Ecoli", "Kpneumo", "Entero")
-meta = c("HQ", "Healthy-Adult")
+meta = c("All", "Healthy-Adult")
 selected = c()
 for (t in taxa){
   for (m in meta){
@@ -134,13 +134,12 @@ selected = unique(selected)
 final.df = combined.df[selected,]
 
 # reformat columns
-order.cols = c("Entero.presence_HQ", "Entero.fastspar_HQ", "Ecoli.presence_HQ", "Ecoli.fastspar_HQ", "Kpneumo.presence_HQ", "Kpneumo.fastspar_HQ",
+order.cols = c("Entero.presence_All", "Entero.fastspar_All", "Ecoli.presence_All", "Ecoli.fastspar_All", "Kpneumo.presence_All", "Kpneumo.fastspar_All",
                "Entero.presence_Healthy-Adult", "Entero.fastspar_Healthy-Adult", "Ecoli.presence_Healthy-Adult", "Ecoli.fastspar_Healthy-Adult", "Kpneumo.presence_Healthy-Adult", "Kpneumo.fastspar_Healthy-Adult")
 
 final.df = final.df[,c("Species_rep", order.cols)]
 colnames(final.df) = gsub(".presence", ".colonization", colnames(final.df))
 colnames(final.df) = gsub(".fastspar", ".abundance", colnames(final.df))
-colnames(final.df) = gsub("_HQ", "_All", colnames(final.df))
 
 # calculate summary scores
 final.df$`Co-excluder`= rowSums(final.df[,2:13] < 0)

@@ -9,7 +9,7 @@ library(ggpubr)
 
 # load metadata file
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/")
-metadata = read.delim("metadata/metagenomes_11-2023_samples.tsv")
+metadata = read.delim("metadata/metagenomes_07-2024_samples.tsv")
 metadata = metadata[which(!is.na(metadata$Disease.name) & !is.na(metadata$Age.group) & !is.na(metadata$Continent)),]
 rownames(metadata) = metadata$Sample
 

@@ -44,7 +44,7 @@ setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antip
 
 # generate roc data
 input.files = list.files(path = ".", pattern = ".Rds")
-input.files = input.files[grep("HQ_",input.files)]
+input.files = input.files[grep("All_",input.files)]
 roc.list = lapply(input.files, function(x) {
   taxon = strsplit(x, "_")[[1]][2]
   dataset = strsplit(x, "_")[[1]][1]
@@ -62,17 +62,21 @@ roc.agg.mean$sd = roc.agg.sd$sensitivity
 roc.agg.mean$AUC = NA
 
 # get AUCs
-roc.auc.ecoli = read.csv("../HQ_Ecoli_results.csv")
+roc.auc.ecoli = read.csv("../All_Ecoli_results.csv")
 roc.auc.ecoli = round(median(roc.auc.ecoli[which(roc.auc.ecoli$method == "xgbTree"),"AUC"]),3)
-roc.agg.mean[which(roc.agg.mean$Taxon == "Ecoli"),"AUC"] = paste0("E. coli, AUC = ",roc.auc.ecoli)
+roc.agg.mean[which(roc.agg.mean$Taxon == "Ecoli"),"AUC"] = paste0("E. coli, AUROC = ",roc.auc.ecoli)
 
-roc.auc.entero = read.csv("../HQ_Entero_results.csv")
+roc.auc.entero = read.csv("../All_Entero_results.csv")
 roc.auc.entero = round(median(roc.auc.entero[which(roc.auc.entero$method == "xgbTree"),"AUC"]),3)
-roc.agg.mean[which(roc.agg.mean$Taxon == "Entero"),"AUC"] = paste0("Enterobacteriaceae, AUC = ",roc.auc.entero)
+roc.agg.mean[which(roc.agg.mean$Taxon == "Entero"),"AUC"] = paste0("Enterobacteriaceae, AUROC = ",roc.auc.entero)
 
-roc.auc.kp = read.csv("../HQ_Kpneumo_results.csv")
+roc.auc.kp = read.csv("../All_Kpneumo_results.csv")
 roc.auc.kp = round(median(roc.auc.kp[which(roc.auc.kp$method == "xgbTree"),"AUC"]),3)
-roc.agg.mean[which(roc.agg.mean$Taxon == "Kpneumo"),"AUC"] = paste0("K. pneumoniae, AUC = ",roc.auc.kp)
+roc.agg.mean[which(roc.agg.mean$Taxon == "Kpneumo"),"AUC"] = paste0("K. pneumoniae, AUROC = ",roc.auc.kp)
+
+# reorder plot
+order.tax = c("Entero", "Ecoli", "Kpneumo")
+roc.agg.mean$AUC = factor(roc.agg.mean$AUC, levels=roc.agg.mean[match(order.tax, roc.agg.mean$Taxon),"AUC"])
 
 # plot roc curve
 roc.curve = ggplot(roc.agg.mean, aes(x=1-specificity, y=sensitivity, colour=AUC)) +

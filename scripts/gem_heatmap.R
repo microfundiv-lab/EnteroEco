@@ -18,7 +18,7 @@ genome.metadata = read.delim("../metadata/genomes_uhgg-v1.2.tsv")[,c("Genome", "
 rownames(genome.metadata) = genome.metadata$Genome
 
 # load gem data
-gem.df = read.delim("cobrapy-M3constrain_results.tsv", header = F)
+gem.df = read.delim("cobrapy-M3_results.tsv", header = F)
 gem.df$V5 = gem.df$V2
 gem.df$V2 = make.names(gem.df$V2)
 

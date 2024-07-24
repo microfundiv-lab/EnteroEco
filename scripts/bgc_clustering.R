@@ -63,9 +63,11 @@ V(net.filt)$Classification = gsub("Negative", "Co-excluder", V(net.filt)$Classif
 V(net.filt)$Classification = gsub("Positive", "Co-colonizer", V(net.filt)$Classification)
 class.color = c("Co-excluder" = "steelblue", "Co-colonizer" = "tomato")
 class.shape = c("Co-excluder" = 21, "Co-colonizer" = 25)
-family.color = rev(brewer.pal(length(unique(V(net.filt)$Family)), "Set3"))
+family.color = c(brewer.pal(12, "Set3"),"brown")
 names(family.color) = unique(V(net.filt)$Family)
 family.color = sort(family.color)
+family.color["Lachnospiraceae"] = "#CCEBC5"
+family.color["Enterococcaceae"] = "#FFFFB3"
 
 # plot graph
 set.seed(100)

@@ -10,7 +10,7 @@ abund.data.df = data.frame(abund.data[,-1], check.names = FALSE)
 rownames(abund.data.df) = abund.data$Genome
 
 # filter metadata
-metadata = read.delim("data/metadata/metagenomes_11-2023_samples.tsv", check.names = TRUE)
+metadata = read.delim("data/metadata/metagenomes_07-2024_samples.tsv", check.names = TRUE)
 rownames(metadata) = metadata$Sample
 metadata$Disease.name = ifelse(metadata$Health.state == "Healthy", "Healthy", metadata$Disease.name)
 abund.data.df = abund.data.df[,metadata$Sample]

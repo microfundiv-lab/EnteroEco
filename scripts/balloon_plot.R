@@ -11,7 +11,7 @@ library(ggtext)
 
 # load data
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/")
-metadata = read.delim("metadata/metagenomes_11-2023_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
+metadata = read.delim("metadata/metagenomes_07-2024_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
 metadata = metadata[which(!is.na(metadata$Disease.name) & !is.na(metadata$Age.group) & !is.na(metadata$Continent)),]
 rownames(metadata) = metadata$Sample
 
@@ -138,11 +138,11 @@ final_df$condition.value = factor(final_df$condition.value, levels=sort(as.vecto
 
 # create balloon plot
 final_df = final_df[which(final_df$Genome %in% c("GUT_GENOME144544", "GUT_GENOME147598","GUT_GENOME143760", "GUT_GENOME000563", "GUT_GENOME231247")),]
-balloon = ggplot(final_df, aes(x = reorder(Species,Prevalence), y = condition.value, size = Prevalence, fill = log(Rel_abund))) +
+balloon = ggplot(final_df, aes(x = reorder(Species,Prevalence), y = condition.value, size = Prevalence, fill = log10(Rel_abund))) +
   geom_point(alpha = 0.7, pch=21, colour="black") +
   coord_flip() +
   facet_grid(~ Metadata, scales = "free_x", space = "free") +
-  scale_fill_gradient2(low = "navy", mid= "white", high = "red", name="log(Abundance)") +
+  scale_fill_gradient2(low = "navy", mid= "white", high = "red", name=expression(log[10]~(Abundance))) +
   scale_size_continuous(range = c(1,8), name = "Prevalence (%)") +
   scale_y_discrete(position = "right") +
   theme_minimal() +
@@ -163,3 +163,7 @@ for(col in colnames(entero.relab)) {
 }
 entero.relab[entero.relab == 0] = NA
 min(entero.relab, na.rm=TRUE)
+
+# get top E.coli prevalence
+ecoli.prev = final_df[which(final_df$Species == "Escherichia coli"),]
+ecoli.prev = ecoli.prev[order(ecoli.prev$Prevalence, decreasing=TRUE),]

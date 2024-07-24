@@ -64,4 +64,7 @@ bar.plot = ggplot(disagree.melt, aes(x=Taxon, y=value, fill=variable)) +
   theme(legend.text = element_text(size=12), legend.position="right") +
   theme(axis.text.x = element_text(size=14, face="italic"))
 ggsave("../figures/agreement_barplot.pdf", dpi=300, width=7, height=5)
+
+# prop of agreement
+prop.agree = (nrow(comb.coloniz.abund)-length(disc.all))/nrow(comb.coloniz.abund)*100
    

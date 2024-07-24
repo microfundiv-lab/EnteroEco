@@ -82,16 +82,13 @@ for (n in 1:nrow(tax.df)){
 tax.df = data.frame(lapply(tax.df, function(x) { gsub(".__", "", x)}))
 rownames(tax.df) = tax.df$Species_rep
 gene.counts$Taxon = tax.df[rownames(gene.counts), "Taxon"]
-gene.counts = rbind(gene.counts, c(sum(gene.counts[3:nrow(gene.counts),"V2"]), "Other"))
-rownames(gene.counts)[nrow(gene.counts)] = "Other"
 gene.counts$V2 = as.numeric(gene.counts$V2)
+gene.counts = gene.counts[which(gene.counts$V2 > 0),]
 
 # gene counts per cog
-selected.taxa = c("GUT_GENOME096210", "GUT_GENOME000718")
-#sig.cog$V2 = ifelse(sig.cog$V2 %in% selected.taxa, sig.cog$V2, "Other")
 sig.cog$Cat = cog.catalog[match(sig.cog$V3, cog.catalog$variable),"Group"]
 cog.counts = aggregate(V1 ~ V2 + Cat, data=sig.cog, FUN=length)
-for (species in unique(cog.counts$V2)) {
+for (species in unique(rownames(gene.counts))) {
   n_annot = sum(cog.counts[which(cog.counts$V2 == species),"V1"])
   n_none = gene.counts$V2[which(rownames(gene.counts) == species)] - n_annot
   cog.counts = rbind(cog.counts, c(species, "Unassigned", n_none))
@@ -100,18 +97,19 @@ for (species in unique(cog.counts$V2)) {
 cog.counts$Taxon = gene.counts[match(cog.counts$V2, rownames(gene.counts)),"Taxon"]
 
 # plot counts
-gene.plot = ggplot(cog.counts, aes(x=reorder(Taxon, V1), y=V1, fill=Cat)) +
+gene.plot = ggplot(cog.counts, aes(x=Taxon, y=V1, fill=Cat)) +
   geom_bar(stat="identity", alpha=0.6, width=0.8) +
   theme_classic() +
   coord_flip() +
   xlab("") +
   ylab("# Significant accessory genes") +
   scale_fill_manual(values=c("tomato", "steelblue", "darkgreen", "darkgrey", "lightgrey"), name="Functional category") +
-  theme(legend.position = "inside", legend.position.inside = c(0.6,0.45), legend.text=element_text(size=10)) +
+  scale_x_discrete(limits=rev(gene.counts$Taxon)) +
+  theme(legend.position = c(0.6,0.45), legend.text=element_text(size=10)) +
   theme(axis.title.x = element_text(size=14)) +
   theme(axis.text.x = element_text(size=12)) +
   theme(axis.text.y = element_text(size=12, face="italic"))
 
 # combine plots
-ggarrange(gene.plot, bar.plot, widths=c(1.2,1), labels=c("a", "b"), font.label = list(size=18))
-ggsave(file = "../figures/strains_barplots.pdf", dpi=300, height=5, width=14)
+ggarrange(gene.plot, bar.plot, widths=c(2,1), labels=c("a", "b"), font.label = list(size=18))
+ggsave(file = "../figures/strains_barplots.pdf", dpi=300, height=5, width=12)

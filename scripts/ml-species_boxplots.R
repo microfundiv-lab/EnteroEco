@@ -33,9 +33,9 @@ ml.compare = ggplot(pf.combined, aes(x=Dataset, y=AUC, fill=Taxon)) +
   facet_wrap(~ method, ncol=3) +
   geom_hline(yintercept = 0.7, linetype="dashed") +
   ylim(0.5,1) +
-  ylab("AUC") +
+  ylab("AUROC") +
   theme_bw() +
-  scale_x_discrete(limits=c("HQ", "Healthy-Adult"), labels=c("All", "Healthy adults")) +
+  scale_x_discrete(limits=c("All", "Healthy-Adult"), labels=c("All", "Healthy adults")) +
   scale_fill_manual(values=c("steelblue", "darkgreen", "tomato"), labels=c("Enterobacteriaceae", "E. coli", "K. pneumoniae")) +
   theme(panel.grid.minor = element_blank()) + 
   theme(legend.pos = "top") +
@@ -48,3 +48,6 @@ ml.compare = ggplot(pf.combined, aes(x=Dataset, y=AUC, fill=Taxon)) +
   theme(axis.title.y = element_text(size=16)) + 
   theme(axis.text.x = element_text(size=14))
 ggsave(filename="../figures/ml-species_boxplots.pdf", width=8, height=4)
+
+# median AUROC in all
+median.auroc = median(pf.combined[which(pf.combined$Dataset == "All"),"AUC"])

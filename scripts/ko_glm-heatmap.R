@@ -5,6 +5,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
+library(stringr)
 
 # load data 
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/genofan/")
@@ -76,6 +77,14 @@ ko.top$Description = gsub("Trna","tRNA",ko.top$Description)
 ko.top$Description = gsub("Rna","RNA",ko.top$Description)
 ko.top$Description = gsub("Mfs","MFS",ko.top$Description)
 ko.top$Description = gsub("Udp","UDP",ko.top$Description)
+ko.top$Description = gsub("Rrna","rRNA",ko.top$Description)
+ko.top$Description = gsub("Topoisomerase Iv","Topoisomerase IV",ko.top$Description)
+ko.top$Description = gsub("Dnai","DnaI",ko.top$Description)
+ko.top$Description = gsub("Nss","NSS",ko.top$Description)
+ko.top$Description = gsub("Hth","HTH",ko.top$Description)
+ko.top$Description = gsub("Involved In","involved in",ko.top$Description)
+ko.top$Description = gsub("Gtpase","GTPase",ko.top$Description)
+ko.top$Description = gsub("Htpg","HtpG",ko.top$Description)
 
 # heatmap colors
 neg = rownames(final.df)[which(final.df$Classification == "Co-excluder")]

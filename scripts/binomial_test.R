@@ -11,7 +11,7 @@ abund.data.df = data.frame(abund.data[,-1], check.names = FALSE)
 rownames(abund.data.df) = abund.data$Genome
 
 # filter metadata
-metadata = read.delim("metadata/metagenomes_11-2023_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
+metadata = read.delim("metadata/metagenomes_07-2024_samples.tsv", stringsAsFactors = FALSE, check.names = TRUE)
 rownames(metadata) = metadata$Sample
 abund.data.df = abund.data.df[,metadata$Sample]
 
