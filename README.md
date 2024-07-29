@@ -1,5 +1,5 @@
 # Project EnteroEco
-Repository for microbiome project investigating the global ecological landscape of <i>Enterobacteriaceae</i>.
+Repository of research project investigating the global ecological landscape of <i>Enterobacteriaceae</i> in the human gut microbiome.
 
 # Workflows
 These are the custom workflows that were used in this study. Each individual repo has detailed instructions on how to install and run the pipelines.
