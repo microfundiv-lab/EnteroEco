@@ -28,28 +28,25 @@ get_sens_spec_lookup = function(outcome, data){
 }
 
 # function to generate roc data per model
-gen_roc_data = function(model, outcome, taxon, meta){
+gen_roc_data = function(model, outcome, continent){
   select.model = readRDS(model)
   prob = predict(select.model$trained_model, select.model$test_data, type="prob")
   observed = select.model$test_data$Variable
   prob_obs = bind_cols(prob, observed=observed)
   roc.data = map_dfr(.x=outcome, .f=get_sens_spec_lookup, prob_obs)
-  roc.data$Taxon = taxon
-  roc.data$Dataset = meta
+  roc.data$Continent = continent
   return(roc.data)
 }
 
 # load best models
-setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/ml-species/best_models/")
+setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_QiYin_Antipath/data/ml-species/continent_within/")
 
 # generate roc data
-input.files = list.files(path = ".", pattern = ".Rds")
-input.files = input.files[grep("All_",input.files)]
+input.files = list.files(path = ".", pattern = ".Rds", recursive = TRUE)
 roc.list = lapply(input.files, function(x) {
-  taxon = strsplit(x, "_")[[1]][2]
-  dataset = strsplit(x, "_")[[1]][1]
   cat("Generating ROC data for", x, "...\n")
-  roc.data = gen_roc_data(x, "Yes", taxon, dataset)
+  continent = gsub("_.*", "", x)
+  roc.data = gen_roc_data(x, "Yes", continent)
   roc.data$TPR = 1-roc.data$specificity
   return(roc.data)
 })
@@ -57,33 +54,27 @@ roc.list = lapply(input.files, function(x) {
 roc.combined = as.data.frame(rbindlist(roc.list))
 roc.combined$TPR = round(roc.combined$TPR, digits=3)
 roc.combined$sensitivity = round(roc.combined$sensitivity, digits=3)
-roc.agg.mean = aggregate(sensitivity ~ TPR + Taxon + Dataset, data=roc.combined, FUN=mean)
+roc.agg.mean = aggregate(sensitivity ~ TPR + Continent, data=roc.combined, FUN=mean)
 roc.agg.mean$AUC = NA
 
-## ensure monotonicity
-for (tax in unique(roc.agg.mean$Taxon)) {
-  tax.rows = which(roc.agg.mean$Taxon == tax)
-  for (n in tax.rows[2:length(tax.rows)]){
+# ensure monotonicity
+for (cont in unique(roc.agg.mean$Continent)) {
+  cont.rows = which(roc.agg.mean$Continent == cont)
+  for (n in cont.rows[2:length(cont.rows)]){
     roc.agg.mean[n,"sensitivity"] = ifelse(roc.agg.mean[n-1,"sensitivity"] > roc.agg.mean[n,"sensitivity"], roc.agg.mean[n-1,"sensitivity"], roc.agg.mean[n,"sensitivity"])
   }
 }
 
 # get AUCs
-roc.auc.ecoli = read.csv("../All_Ecoli_results.csv")
-roc.auc.ecoli = round(median(roc.auc.ecoli[which(roc.auc.ecoli$method == "xgbTree"),"AUC"]),3)
-roc.agg.mean[which(roc.agg.mean$Taxon == "Ecoli"),"AUC"] = paste0("E. coli, AUROC = ",roc.auc.ecoli)
-
-roc.auc.entero = read.csv("../All_Entero_results.csv")
-roc.auc.entero = round(median(roc.auc.entero[which(roc.auc.entero$method == "xgbTree"),"AUC"]),3)
-roc.agg.mean[which(roc.agg.mean$Taxon == "Entero"),"AUC"] = paste0("Enterobacteriaceae, AUROC = ",roc.auc.entero)
-
-roc.auc.kp = read.csv("../All_Kpneumo_results.csv")
-roc.auc.kp = round(median(roc.auc.kp[which(roc.auc.kp$method == "xgbTree"),"AUC"]),3)
-roc.agg.mean[which(roc.agg.mean$Taxon == "Kpneumo"),"AUC"] = paste0("K. pneumoniae, AUROC = ",roc.auc.kp)
-
-# reorder plot
-order.tax = c("Entero", "Ecoli", "Kpneumo")
-roc.agg.mean$AUC = factor(roc.agg.mean$AUC, levels=roc.agg.mean[match(order.tax, roc.agg.mean$Taxon),"AUC"])
+perf.files = list.files(path = ".", pattern = "performance_results.csv", recursive=TRUE)
+for (perf in perf.files) {
+  roc.auc.cont = read.csv(perf)
+  continent = gsub("_.*", "", perf)
+  cont.space = gsub("NorthAmerica", "North America", continent)
+  cont.space = gsub("SouthAmerica", "South America", cont.space)
+  auc.value = round(median(roc.auc.cont[,"AUC"], na.rm=TRUE),3)
+  roc.agg.mean[which(roc.agg.mean$Continent == continent),"AUC"] = paste0(cont.space, ", AUROC = ", auc.value)
+}
 
 # plot roc curve
 roc.curve = ggplot(roc.agg.mean, aes(x=TPR, y=sensitivity, colour=AUC)) +
@@ -95,15 +86,15 @@ roc.curve = ggplot(roc.agg.mean, aes(x=TPR, y=sensitivity, colour=AUC)) +
   xlim(0,1) +
   ylab("True Positive Rate") + 
   xlab("False Positive Rate") +
-  scale_colour_manual(values=c("steelblue", "darkgreen", "tomato")) +
+  scale_colour_manual(values=brewer.pal(10, "Set3")) +
   theme(legend.position="right") +
   guides(colour = guide_legend(override.aes = list(linewidth = 2))) +
   theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank()) + 
   theme(strip.background = element_blank(), strip.text = element_text(size=16)) +
-  theme(legend.position=c(0.65,0.2), legend.box = "horizontal", legend.text=element_text(size=16),
+  theme(legend.position=c(0.65,0.2), legend.box = "horizontal", legend.text=element_text(size=14),
         legend.title = element_blank()) +
   theme(axis.title.y = element_text(size=16)) + 
   theme(axis.text.y = element_text(size=14)) + 
   theme(axis.title.x = element_text(size=16)) + 
   theme(axis.text.x = element_text(size=14))
-ggsave(filename="../../figures/ml-species_roc.pdf", width=7, height=5, dpi=300)
+ggsave(filename="../../figures/ml-species_roc_cont.pdf", width=7, height=5, dpi=300)

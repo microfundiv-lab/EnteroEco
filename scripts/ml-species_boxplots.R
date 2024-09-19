@@ -42,12 +42,13 @@ ml.compare = ggplot(pf.combined, aes(x=Dataset, y=AUC, fill=Taxon)) +
   theme(strip.background = element_blank(), strip.text = element_text(size=14)) +
   theme(legend.position="top", legend.box = "horizontal", legend.text=element_text(size=14, face="italic"),
         legend.title = element_blank()) +
-  theme(panel.grid.minor = element_blank()) + 
+  theme(panel.grid.minor = element_blank()) +
+  theme(panel.spacing = unit(2, "lines")) +
   theme(axis.title.x = element_blank()) + 
   theme(axis.text.y = element_text(size=14)) + 
   theme(axis.title.y = element_text(size=16)) + 
   theme(axis.text.x = element_text(size=14))
-ggsave(filename="../figures/ml-species_boxplots.pdf", width=8, height=4)
+ggsave(filename="../figures/ml-species_boxplots.pdf", width=12, height=4)
 
 # median AUROC in all
 median.auroc = median(pf.combined[which(pf.combined$Dataset == "All"),"AUC"])

@@ -43,7 +43,7 @@ family.spcies.data = species.data[,c("Family","Species")]
 family.spcies.data$Genome = rownames(family.spcies.data)
 
 # load count data
-abund.data = as.data.frame(fread("bwa/bwa_counts-filtered_batch-corr_samples.csv"))
+abund.data = as.data.frame(fread("bwa/bwa_counts-filtered_samples.csv"))
 rownames(abund.data) = abund.data$Genome
 abund.data = abund.data[which(abund.data$Genome %in% genome.lengths$Genome),]
 abund.data.df = abund.data[,rownames(metadata)]
@@ -53,6 +53,7 @@ genome.lengths = genome.lengths[rownames(abund.data.df),]
 # select species
 entero.species = family.spcies.data[which(family.spcies.data$Family == "f__Enterobacteriaceae"),"Genome"]
 overall.prev = data.frame(sort(rowSums(abund.data.df > 0), decreasing=TRUE))
+overall.prev = overall.prev[which(overall.prev[,1] > 0), ,drop=FALSE]
 detected.entero = rownames(overall.prev)[rownames(overall.prev) %in% entero.species]
 
 # function to estimate prevalence

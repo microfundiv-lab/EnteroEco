@@ -67,4 +67,4 @@ entero.alpha = ggplot(metadata, aes(x=Entero.abund, y=Alpha.div)) +
   theme(axis.text.x = element_text(size=14)) +
   theme(axis.text.y = element_text(size=14)) +
   annotation_custom(grob)
-ggsave("figures/alpha_diversity.pdf", dpi=300, height=4, width=7)
+ggsave("figures/alpha_diversity.pdf", dpi=300, height=4, width=9)

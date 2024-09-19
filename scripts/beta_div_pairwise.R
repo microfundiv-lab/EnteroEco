@@ -70,4 +70,4 @@ beta.dens = ggplot(beta.all, aes(x = Distance, fill = Classification)) +
   theme(axis.text = element_text(size=12)) +
   theme(legend.text = element_text(size=12)) +
   theme(legend.title = element_text(size=12))
-ggsave(filename = "figures/beta-div_pairwise.pdf", width=8, height=4, dpi=300)
+ggsave(filename = "figures/beta-div_pairwise.pdf", width=10, height=4, dpi=300)
