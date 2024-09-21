@@ -28,6 +28,8 @@ names(colors) = families
 process_maaslin2 = function(status, label) {
   all.results = all.results.raw[which(all.results.raw$value == status),]
   all.results$FDR = p.adjust(all.results$pval, method="fdr")
+  ori.species = scan("metadata/species_list.txt", what="")
+  all.results = all.results[which(all.results$feature %in% ori.species),]
   sig.results = all.results[which(all.results$FDR < 0.05),]
   
   # compare results
@@ -94,7 +96,7 @@ process_maaslin2 = function(status, label) {
     ylab("Number of species") +
     theme(axis.text.x = element_text(size=12), axis.text.y = element_text(size = 12), axis.title.y = element_blank(), axis.title.x = element_text(size=14),
           legend.text = element_text(size = 12), legend.title = element_text(size=12), legend.position = "right")
-  ggarrange(overlap.plot, species.plots, nrow=2, heights=c(0.75,2))
+  ggarrange(overlap.plot, species.plots, nrow=2, heights=c(0.7,2))
 }
 
 # generate tables
