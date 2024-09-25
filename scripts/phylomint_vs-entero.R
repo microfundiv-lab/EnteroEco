@@ -42,7 +42,7 @@ clust2.corr = cor.test(clust2.df$Competition, clust2.df$Complementarity)
 
 # plot and save
 scatter.entero = ggplot(phy.entero, aes(x=Competition, y=Complementarity, colour=Classification)) +
-  geom_point_rast(alpha=0.5, size=0.8) +
+  geom_point_rast(size=0.8) +
   scale_colour_manual(values = c("Co-excluder" = 'steelblue', "Co-colonizer" = "tomato")) +
   geom_smooth(aes(colour=Cluster), method="lm", se=TRUE) +
   ylab("Metabolic complementarity") +
@@ -56,7 +56,7 @@ scatter.entero = ggplot(phy.entero, aes(x=Competition, y=Complementarity, colour
   theme(axis.text.x = element_text(size=12))
 
 plot.split = ggplot(phy.entero, aes(x=Classification, y= Distance, fill = Classification)) +
-    geom_point_rast(alpha=0.1, size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
+    geom_point_rast(colour = "darkgrey", size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
     geom_boxplot(alpha = 0.7, outlier.shape = NA) +
     facet_wrap(~ Cluster) +
     theme_classic() +
@@ -78,7 +78,7 @@ ggarrange(scatter.entero, plot.split, common.legend=TRUE, labels=c("a", "b"), fo
 ggsave(file = "../figures/phylomint_clsts.pdf", dpi=300, height=5, width=11)
 
 plot.all = ggplot(phy.entero, aes(x=Classification, y= Distance, fill = Classification)) +
-  geom_point_rast(alpha=0.1, size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
+  geom_point_rast(colour = "darkgrey", size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
   geom_boxplot(alpha = 0.7, outlier.shape = NA) +
   scale_x_discrete(limits=c("Co-excluder", "Co-colonizer")) +
   scale_fill_manual(values = c("Co-excluder" = 'steelblue', "Co-colonizer" = "tomato")) +
@@ -91,4 +91,4 @@ plot.all = ggplot(phy.entero, aes(x=Classification, y= Distance, fill = Classifi
   theme(axis.title.y = element_text(size=14)) +
   theme(axis.text.y = element_text(size=12)) +
   theme(axis.text.x = element_text(size=12))
-ggsave(plot.all, file = "../figures/phylomint_all.pdf", dpi=300, height=5, width=5)
+ggsave(plot.all, file = "../figures/phylomint_vs-entero.pdf", dpi=300, height=5, width=5)

@@ -56,7 +56,7 @@ phy.combined$Medium = gsub("veget", "Vegetarian", phy.combined$Medium)
 
 # plot results
 plot.all = ggplot(phy.combined, aes(x=Classification, y= Distance, fill = Classification)) +
-  geom_point_rast(alpha=0.1, size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
+  geom_point_rast(colour = "darkgrey", size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
   geom_boxplot(alpha = 0.7, outlier.shape = NA) +
   facet_wrap(~ Medium) +
   theme_classic() +

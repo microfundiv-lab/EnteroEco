@@ -99,7 +99,7 @@ target.df$Family = metadata[match(target.df$Species_rep , metadata$Species_rep),
 
 # plot distribution
 dis.mibig = ggplot(target.df, aes(x = reorder(cluster.group, identity, FUN = median), y = identity, fill = Family)) +
-  geom_point_rast(alpha=0.1, size=0.2, position = position_jitter(width = 0.2)) +
+  geom_point_rast(colour="darkgrey", size=0.2, position = position_jitter(width = 0.2)) +
   geom_boxplot(alpha=0.7, outlier.shape=NA) +
   theme_classic() +
   coord_flip() +

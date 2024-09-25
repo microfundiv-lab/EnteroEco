@@ -18,7 +18,6 @@ metadata = metadata[which(metadata$Family != "Enterobacteriaceae"),]
 # get list of species
 co.excluders = rownames(metadata)[which(metadata$Classification == "Co-excluder")]
 co.colonizers = rownames(metadata)[which(metadata$Classification == "Co-colonizer")]
-entero.species = read.delim("../metadata/species_entero.txt", header = F, stringsAsFactors = F)
 
 # add taxonomy
 ranks = c("Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species")
@@ -49,7 +48,7 @@ phy.fi = merge(phy.fi, metadata[c("Species_rep", "Classification", "Order", "Fam
 
 # plot and save
 plot.split = ggplot(phy.fi, aes(x=Classification, y= Distance, fill = Classification)) +
-  geom_point_rast(alpha=0.1, size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
+  geom_point_rast(colour = "darkgrey", size=0.5, position = position_jitterdodge(jitter.width = 0.5)) +
   geom_boxplot(alpha = 0.7, outlier.shape = NA) +
   facet_wrap(~ Comparison, ncol=3) +
   theme_classic() +
