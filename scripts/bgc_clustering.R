@@ -97,6 +97,12 @@ target.df = merge(target.df, node.cluster, by = "region")
 target.df$Species_rep = gsub("(GUT_GENOME\\d+)_.*", "\\1", target.df$locus)
 target.df$Family = metadata[match(target.df$Species_rep , metadata$Species_rep),"Family"]
 
+# add N
+cluster.n = data.frame(table(target.df$cluster.group))
+rownames(cluster.n) = cluster.n$Var1
+x.labels = paste0(levels(reorder(target.df$cluster.group, target.df$identity, FUN = median)), 
+                  " (n=", cluster.n[levels(reorder(target.df$cluster.group, target.df$identity, FUN = median)), 2], ")")
+
 # plot distribution
 dis.mibig = ggplot(target.df, aes(x = reorder(cluster.group, identity, FUN = median), y = identity, fill = Family)) +
   geom_point_rast(colour="darkgrey", size=0.2, position = position_jitter(width = 0.2)) +
@@ -107,6 +113,7 @@ dis.mibig = ggplot(target.df, aes(x = reorder(cluster.group, identity, FUN = med
   xlab("BGC family") +
   scale_fill_manual(values=family.color) +
   guides(fill="none") +
+  scale_x_discrete(labels = x.labels) +
   theme(axis.title.y = element_text(size=14)) +
   theme(axis.text.y = element_text(size=10)) + 
   theme(axis.title.x = element_text(size=16)) +

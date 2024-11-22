@@ -54,7 +54,7 @@ barplot.df$Cat = cog.catalog[match(barplot.df$variable, cog.catalog$variable),"G
 bar.plot = ggplot(barplot.df, aes(x = variable, y = value, fill = type))+
   geom_bar(stat = "identity", position = "dodge", width=0.8, alpha=0.6) +
   scale_fill_manual(values = c("purple4", "darkgrey"), name="Classification", labels=c("Significant", "All")) +
-  scale_x_discrete(limits=order.cats, labels=c("Function\nunknown", "Replication\nand repair", "Translation", "Nucleotide\nmetabolism")) +
+  scale_x_discrete(limits=order.cats, labels=order.annot) +
   theme_classic() +
   ylab("Cluster proportion (%)") +
   theme(legend.position = "right", legend.text=element_text(size=10)) +

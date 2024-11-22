@@ -37,7 +37,7 @@ batch.prop$Diff = batch.prop$Yes-batch.prop$No
 batch.prop = batch.prop[which(batch.prop$Yes > 0 & batch.prop$No > 0),]
 
 # analyse data
-correlation = cor.test(log10(batch.prop$No+1), log10(batch.prop$Yes+1))
+correlation = cor.test(log10(batch.prop$No+1), log10(batch.prop$Yes+1), alternative="two.sided")
 grob = grobTree(textGrob(paste("Pearson's R2 =", signif(correlation$estimate**2, digits=3), "\nP =", 
                                           signif(correlation$p.value, digits=3)), x=0.2,  y=0.8, hjust=0, gp=gpar(col="black", fontsize=14)))
 scatter.plot = ggplot(batch.prop, aes(x=log10(Yes+1), y=log10(No+1))) +
