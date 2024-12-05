@@ -50,14 +50,14 @@ roc.list = lapply(input.files, function(x) {
   dataset = strsplit(x, "_")[[1]][1]
   cat("Generating ROC data for", x, "...\n")
   roc.data = gen_roc_data(x, "Yes", taxon, dataset)
-  roc.data$TPR = 1-roc.data$specificity
+  roc.data$FPR = 1-roc.data$specificity
   return(roc.data)
 })
 
 roc.combined = as.data.frame(rbindlist(roc.list))
-roc.combined$TPR = round(roc.combined$TPR, digits=3)
+roc.combined$FPR = round(roc.combined$FPR, digits=3)
 roc.combined$sensitivity = round(roc.combined$sensitivity, digits=3)
-roc.agg.mean = aggregate(sensitivity ~ TPR + Taxon + Dataset, data=roc.combined, FUN=mean)
+roc.agg.mean = aggregate(sensitivity ~ FPR + Taxon + Dataset, data=roc.combined, FUN=mean)
 roc.agg.mean$AUC = NA
 
 ## ensure monotonicity
@@ -86,7 +86,7 @@ order.tax = c("Entero", "Ecoli", "Kpneumo")
 roc.agg.mean$AUC = factor(roc.agg.mean$AUC, levels=roc.agg.mean[match(order.tax, roc.agg.mean$Taxon),"AUC"])
 
 # plot roc curve
-roc.curve = ggplot(roc.agg.mean, aes(x=TPR, y=sensitivity, colour=AUC)) +
+roc.curve = ggplot(roc.agg.mean, aes(x=FPR, y=sensitivity, colour=AUC)) +
   geom_line(linewidth=0.5) +
   geom_abline(slope=1, intercept=0, linetype="dashed", colour="grey") +
   theme_classic() + 

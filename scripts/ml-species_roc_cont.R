@@ -47,14 +47,14 @@ roc.list = lapply(input.files, function(x) {
   cat("Generating ROC data for", x, "...\n")
   continent = gsub("_.*", "", x)
   roc.data = gen_roc_data(x, "Yes", continent)
-  roc.data$TPR = 1-roc.data$specificity
+  roc.data$FPR = 1-roc.data$specificity
   return(roc.data)
 })
 
 roc.combined = as.data.frame(rbindlist(roc.list))
-roc.combined$TPR = round(roc.combined$TPR, digits=3)
+roc.combined$FPR = round(roc.combined$FPR, digits=3)
 roc.combined$sensitivity = round(roc.combined$sensitivity, digits=3)
-roc.agg.mean = aggregate(sensitivity ~ TPR + Continent, data=roc.combined, FUN=mean)
+roc.agg.mean = aggregate(sensitivity ~ FPR + Continent, data=roc.combined, FUN=mean)
 roc.agg.mean$AUC = NA
 
 # ensure monotonicity
@@ -77,7 +77,7 @@ for (perf in perf.files) {
 }
 
 # plot roc curve
-roc.curve = ggplot(roc.agg.mean, aes(x=TPR, y=sensitivity, colour=AUC)) +
+roc.curve = ggplot(roc.agg.mean, aes(x=FPR, y=sensitivity, colour=AUC)) +
   geom_line(linewidth=0.5) +
   geom_abline(slope=1, intercept=0, linetype="dashed", colour="grey") +
   theme_classic() + 
